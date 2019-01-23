@@ -4264,7 +4264,7 @@ int mdss_mdp_ctl_intf_event(struct mdss_mdp_ctl *ctl, int event, void *arg,
 	pr_debug("sending ctl=%d event=%d flag=0x%x\n", ctl->num, event, flags);
 
 	do {
-		if (pdata->event_handler) {
+		if (pdata->event_handler){
 			rc = pdata->event_handler(pdata, event, arg);
 			if (event == MDSS_EVENT_LINK_READY)
 				mdss_mdp_wait_for_panel_on(pdata);
