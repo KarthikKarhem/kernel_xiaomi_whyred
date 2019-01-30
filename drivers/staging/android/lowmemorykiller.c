@@ -237,25 +237,34 @@ static DEFINE_MUTEX(scan_mutex);
 
 int can_use_cma_pages(gfp_t gfp_mask)
 {
-	int can_use = 0;
-	int mtype = gfpflags_to_migratetype(gfp_mask);
-	int i = 0;
-	int *mtype_fallbacks = get_migratetype_fallbacks(mtype);
+	bool ret = false;
+	if (name == NULL)return ret;
 
-	if (is_migrate_cma(mtype)) {
-		can_use = 1;
-	} else {
-		for (i = 0;; i++) {
-			int fallbacktype = mtype_fallbacks[i];
-
-			if (is_migrate_cma(fallbacktype)) {
-				can_use = 1;
-				break;
-			}
-
-			if (fallbacktype == MIGRATE_TYPES)
-				break;
-		}
+	if ((!strcmp(name, "com.miui.home")) ||
+		(!strcmp(name, "com.android.launcher3")) ||
+		(!strcmp(name, "com.android.quickstep")) ||
+		(!strcmp(name, "org.lineageos.snap")) ||
+		(!strcmp(name, "com.teslacoilsw.launcher")) ||
+		(!strcmp(name, "com.Tele.GCam")) ||
+		(!strcmp(name, "com.google.android.Redmi4X")) ||
+		(!strcmp(name, "com.teslacoilsw.launcher")) ||
+		(!strcmp(name, "com.android.launcher3")) ||
+		(!strcmp(name, "com.google.android.apps.nexuslauncher")) ||
+		(!strcmp(name, "ch.deletescape.lawnchair.plah")) ||
+		(!strcmp(name, "com.google.android.launcher")) ||
+		(!strcmp(name, "ru.whatau.cpl")) ||
+		(!strcmp(name, "amirz.rootless.nexuslauncher")) ||
+		(!strcmp(name, "com.google.android.GooglrCamera")) ||
+		(!strcmp(name, "ch.deletescape.lawnchair.ci")) ||
+		(!strcmp(name, "com.bsgmod.camera")) ||
+		(!strcmp(name, "com.whatsapp")) ||		
+		(!strcmp(name, "com.android.contacts")) ||
+		(!strcmp(name, "com.android.mms")) ||
+		(!strcmp(name, "com.xiaomi.hm.health")) ||
+		(!strcmp(name, "com.mi.android.globallauncher")) ||
+		(!strcmp(name, ".android.camera")))
+	{
+		ret = true;
 	}
 	return can_use;
 }
