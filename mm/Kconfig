@@ -756,6 +756,7 @@ config SPECULATIVE_PAGE_FAULT
 	depends on ARCH_SUPPORTS_SPECULATIVE_PAGE_FAULT
 	depends on ARCH_HAS_PTE_SPECIAL && MMU && SMP
 	help
+
 	  Try to handle user space page faults without holding the mmap_sem.
 
 	  This should allow better concurrency for massively threaded processes

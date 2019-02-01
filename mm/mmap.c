@@ -319,6 +319,7 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
 	if (vma->vm_ops && vma->vm_ops->close)
 		vma->vm_ops->close(vma);
 	put_vma(vma);
+	uksm_remove_vma(vma);
 	return next;
 }
 
@@ -840,6 +841,30 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
 	if (next)
 		vm_raw_write_begin(next);
 
+	/*
+	 * Why using vm_raw_write*() functions here to avoid lockdep's warning ?
+	 *
+	 * Locked is complaining about a theoretical lock dependency, involving
+	 * 3 locks:
+	 *	 mapping->i_mmap_rwsem --> vma->vm_sequence --> fs_reclaim
+	 *
+	 * Here are the major path leading to this dependency :
+	 *	1. __vma_adjust() mmap_sem	-> vm_sequence -> i_mmap_rwsem
+	 *	2. move_vmap() mmap_sem -> vm_sequence -> fs_reclaim
+	 *	3. __alloc_pages_nodemask() fs_reclaim -> i_mmap_rwsem
+	 *	4. unmap_mapping_range() i_mmap_rwsem -> vm_sequence
+	 *
+	 * So there is no way to solve this easily, especially because in
+	 * unmap_mapping_range() the i_mmap_rwsem is grab while the impacted
+	 * VMAs are not yet known.
+	 * However, the way the vm_seq is used is guarantying that we will
+	 * never block on it since we just check for its value and never wait
+	 * for it to move, see vma_has_changed() and handle_speculative_fault().
+	 */
+	vm_raw_write_begin(vma);
+	if (next)
+		vm_raw_write_begin(next);
+
 	if (next && !insert) {
 		struct vm_area_struct *exporter = NULL;
 
@@ -1013,7 +1038,8 @@ again:			remove_next = 1 + (end > next->vm_end);
 		if (next)
 			vm_raw_write_begin(next);
 
-		if (remove_next == 2)
+		if (remove_next == 2) {
+			uksm_remove_vma(next);
 			goto again;
 		else if (next)
 			vma_gap_update(next);
@@ -1028,7 +1054,7 @@ again:			remove_next = 1 + (end > next->vm_end);
 
 	if (!keep_locked)
 		vm_raw_write_end(vma);
-
+	uksm_vma_add_new(vma);
 	validate_mm(mm);
 
 	return 0;

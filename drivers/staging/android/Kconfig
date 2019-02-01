@@ -99,9 +99,27 @@ config ANDROID_VSOC
 	  a 'cuttlefish' Android image inside QEmu. The driver interacts with
 	  a QEmu ivshmem device. If built as a module, it will be called vsoc.
 
+config ANDROID_WHETSTONE
+    bool "Android Whetstone"
+    default y
+    ---help---
+        report to whetstone the memory state when reach target limit value.
+
 source "drivers/staging/android/ion/Kconfig"
 
 source "drivers/staging/android/fiq_debugger/Kconfig"
+
+#config RTMM
+#    bool "RTMM"
+#    default n
+
+#config MISYSINFOFREADER
+#    bool "MI sysinfo reader"
+#    default n
+
+config SCHED_OPT
+    bool "Optimise mutexes for high priority tasks"
+    default n
 
 endif # if ANDROID
 

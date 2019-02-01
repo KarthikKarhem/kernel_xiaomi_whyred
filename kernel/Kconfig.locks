@@ -249,6 +249,10 @@ config QUEUED_RWLOCKS
 	def_bool y if ARCH_USE_QUEUED_RWLOCKS
 	depends on SMP
 
+config SCHED_OPT
+	bool
+	default n
+
 config MUTEX_OPT
 	bool "mutex optimize"
 	select KTRACE

@@ -419,7 +419,6 @@ retry:
 	up_read(&mm->mmap_sem);
 
 done:
-
 	/*
 	 * Handle the "normal" case first - VM_FAULT_MAJOR / VM_FAULT_MINOR
 	 */

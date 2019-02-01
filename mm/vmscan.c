@@ -52,7 +52,9 @@
 
 #include <linux/swapops.h>
 #include <linux/balloon_compaction.h>
+#ifdef CONFIG_RTMM
 #include <linux/rtmm.h>
+#endif
 
 #include "internal.h"
 
@@ -2214,8 +2216,8 @@ static void get_scan_count(struct lruvec *lruvec, int swappiness,
 	 * system is under heavy pressure.
 	 */
 	if (!IS_ENABLED(CONFIG_BALANCE_ANON_FILE_RECLAIM) &&
-			!inactive_file_is_low(lruvec) &&
-			get_lru_size(lruvec, LRU_INACTIVE_FILE) >> sc->priority && (swappiness != 200)) {
+			!inactive_file_is_low(lruvec) && (swappiness != 200) &&
+			get_lru_size(lruvec, LRU_INACTIVE_FILE) >> sc->priority) {
 		scan_balance = SCAN_FILE;
 		goto out;
 	}
@@ -2340,9 +2342,11 @@ static void shrink_lruvec(struct lruvec *lruvec, int swappiness,
 	struct blk_plug plug;
 	bool scan_adjusted;
 
+#ifdef CONFIG_RTMM
 	if (unlikely(rtmm_reclaim(current->comm))) {
 		swappiness = rtmm_reclaim_swappiness();
 	}
+#endif
 
 	get_scan_count(lruvec, swappiness, sc, nr, lru_pages);
 
