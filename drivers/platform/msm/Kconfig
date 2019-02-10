@@ -1,3 +1,7 @@
+config WHYRED_MIUI
+	bool "Brightness configuration for miui"
+	depends on ARCH_SDM630
+
 menu "Qualcomm MSM specific device drivers"
 	depends on ARCH_QCOM
 

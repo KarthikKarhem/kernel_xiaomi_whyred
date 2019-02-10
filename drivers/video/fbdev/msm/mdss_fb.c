@@ -86,6 +86,15 @@
  */
 #define MDP_TIME_PERIOD_CALC_FPS_US	1000000
 
+int backlight_min = 0;
+#ifdef CONFIG_WHYRED_MIUI
+int backlight_max = MDSS_MAX_BL_BRIGHTNESS_MIUI;
+#else
+int backlight_max = MDSS_MAX_BL_BRIGHTNESS;
+#endif
+module_param(backlight_min, int, 0755);
+module_param(backlight_max, int, 0755);
+
 static struct fb_info *fbi_list[MAX_FBI_LIST];
 static int fbi_list_index;
 
