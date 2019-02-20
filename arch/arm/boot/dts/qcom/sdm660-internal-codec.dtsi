@@ -95,7 +95,7 @@
 			vdd-supply = <&pm660l_l6>;
 			vcc_i2c-supply = <&pm660l_l6>;
 			ti,cdc-reset-gpio = <&tlmm 77 0>;
-			ti,irq-gpio =6 <&tlmm 73 0>;
+			ti,irq-gpio = <&tlmm 73 0>;
 			ti,i2s-bits = <32>;
 			status = "ok";
 		};
