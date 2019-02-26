@@ -62,10 +62,8 @@
 #include <linux/sched/rt.h>
 #include <linux/page_owner.h>
 #include <linux/kthread.h>
-#ifdef CONFIG_RTMM
 #include <linux/ktrace.h>
 #include <linux/rtmm.h>
-#endif
 
 #include <asm/sections.h>
 #include <asm/tlbflush.h>
@@ -3390,31 +3388,24 @@ retry_cpuset:
 		 * can deadlock because I/O on the device might not
 		 * complete.
 		 */
-
-#ifdef CONFIG_RTMM
 		u64 start_time, end_time, duration, threshold;
-#endif
+
 		alloc_mask = memalloc_noio_flags(gfp_mask);
 		ac.spread_dirty_pages = false;
 
-#ifdef CONFIG_RTMM
 		start_time = current->stime;
-#endif
 		page = __alloc_pages_slowpath(alloc_mask, order, &ac);
-#ifdef CONFIG_RTMM
 		end_time = current->stime;
 		duration = (end_time - start_time) * (NSEC_PER_SEC / HZ);
 
 		threshold = ktrace_event_slowpath_threshold();
 		if (duration > threshold && !rtmm_pool(current->comm)) {
-			pr_debug("slowpath: %d(%s)(priority %d/%d) order=%d mask=0x%x, %lld ms\n",
+			pr_info("slowpath: %d(%s)(priority %d/%d) order=%d mask=0x%x, %lld ms\n",
 					current->pid, current->comm,
 					current->policy, PRIO_TO_NICE(current->static_prio),
 					order, gfp_mask, duration >> 20);
 			ktrace_event_add_slowpath(ktime_get_ns(), order, duration);
 		}
-#endif
-
 	}
 
 	if (kmemcheck_enabled && page)

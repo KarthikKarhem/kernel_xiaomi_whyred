@@ -80,7 +80,6 @@
 #include <linux/sysctl.h>
 #include <linux/kcov.h>
 #include <linux/cpufreq_times.h>
-#include <linux/rtmm.h>
 
 #include <linux/rtmm.h>
 
@@ -187,7 +186,6 @@ static inline void free_thread_stack(unsigned long *stack)
 	kasan_alloc_pages(page, THREAD_SIZE_ORDER);
 	kaiser_unmap_thread_stack(stack);
 	rtmm_free(ti, RTMM_POOL_THREADINFO);
-	rtmm_free(page, RTMM_POOL_THREADINFO);
 #else
 	kasan_alloc_pages(page, THREAD_SIZE_ORDER);
 	kaiser_unmap_thread_stack(stack);
