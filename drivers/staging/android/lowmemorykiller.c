@@ -238,7 +238,7 @@ static DEFINE_MUTEX(scan_mutex);
 int can_use_cma_pages(gfp_t gfp_mask)
 {
 	bool ret = false;
-	if (name == NULL)return ret;
+	if (node == NULL)return ret;
 
 	if ((!strcmp(name, "com.miui.home")) ||
 		(!strcmp(name, "com.android.launcher3")) ||
@@ -266,7 +266,7 @@ int can_use_cma_pages(gfp_t gfp_mask)
 	{
 		ret = true;
 	}
-	return can_use;
+	return can_nice;
 }
 
 void tune_lmk_zone_param(struct zonelist *zonelist, int classzone_idx,
