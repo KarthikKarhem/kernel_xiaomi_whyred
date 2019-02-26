@@ -238,7 +238,7 @@ static DEFINE_MUTEX(scan_mutex);
 int can_use_cma_pages(gfp_t gfp_mask)
 {
 	bool ret = false;
-	if (node == NULL)return ret;
+	if (name == NULL)return ret;
 
 	if ((!strcmp(name, "com.miui.home")) ||
 		(!strcmp(name, "com.android.launcher3")) ||
@@ -261,12 +261,11 @@ int can_use_cma_pages(gfp_t gfp_mask)
 		(!strcmp(name, "com.android.contacts")) ||
 		(!strcmp(name, "com.android.mms")) ||
 		(!strcmp(name, "com.xiaomi.hm.health")) ||
-		(!strcmp(name, "com.mi.android.globallauncher")) ||
 		(!strcmp(name, ".android.camera")))
 	{
 		ret = true;
 	}
-	return can_nice;
+	return can_use;
 }
 
 void tune_lmk_zone_param(struct zonelist *zonelist, int classzone_idx,
